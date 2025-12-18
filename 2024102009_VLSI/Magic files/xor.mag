@@ -1,0 +1,104 @@
+magic
+tech scmos
+timestamp 1764749184
+<< nwell >>
+rect 93 -6 117 29
+rect 123 1 184 36
+<< ntransistor >>
+rect 104 -25 106 -15
+rect 134 -17 136 -7
+rect 166 -13 176 -11
+<< ptransistor >>
+rect 104 1 106 21
+rect 134 8 136 28
+rect 156 13 176 15
+<< ndiffusion >>
+rect 103 -25 104 -15
+rect 106 -25 107 -15
+rect 133 -17 134 -7
+rect 136 -17 137 -7
+rect 166 -11 176 -10
+rect 166 -14 176 -13
+<< pdiffusion >>
+rect 103 1 104 21
+rect 106 1 107 21
+rect 133 8 134 28
+rect 136 8 137 28
+rect 156 15 176 16
+rect 156 12 176 13
+<< ndcontact >>
+rect 99 -25 103 -15
+rect 107 -25 111 -15
+rect 129 -17 133 -7
+rect 137 -17 141 -7
+rect 166 -10 176 -6
+rect 166 -18 176 -14
+<< pdcontact >>
+rect 99 1 103 21
+rect 107 1 111 21
+rect 129 8 133 28
+rect 137 8 141 28
+rect 156 16 176 20
+rect 156 8 176 12
+<< polysilicon >>
+rect 134 28 136 31
+rect 104 21 106 24
+rect 145 13 156 15
+rect 176 13 179 15
+rect 104 -15 106 1
+rect 134 -7 136 8
+rect 159 -13 166 -11
+rect 176 -13 179 -11
+rect 134 -20 136 -17
+rect 104 -28 106 -25
+<< polycontact >>
+rect 145 15 149 19
+rect 100 -11 104 -7
+rect 130 -4 134 0
+rect 159 -17 163 -13
+<< metal1 >>
+rect 93 32 116 36
+rect 99 21 103 32
+rect 117 28 133 29
+rect 117 24 129 28
+rect 145 19 149 24
+rect 180 20 184 26
+rect 176 16 184 20
+rect 88 -11 95 -7
+rect 107 -15 111 1
+rect 137 0 141 8
+rect 145 8 156 12
+rect 145 0 148 8
+rect 126 -4 130 0
+rect 137 -4 148 0
+rect 137 -7 141 -4
+rect 145 -6 148 -4
+rect 180 0 184 16
+rect 145 -10 166 -6
+rect 180 -14 184 -5
+rect 129 -21 133 -17
+rect 159 -21 163 -17
+rect 176 -18 184 -14
+rect 111 -25 163 -21
+rect 99 -30 103 -25
+rect 93 -33 119 -30
+<< metal2 >>
+rect 126 -5 180 0
+<< m123contact >>
+rect 111 24 117 29
+rect 144 24 149 29
+rect 121 -5 126 0
+rect 180 -5 185 0
+rect 95 -12 100 -7
+<< metal3 >>
+rect 117 24 144 29
+rect 111 -7 117 24
+rect 100 -12 117 -7
+<< labels >>
+rlabel metal1 91 -9 91 -9 3 a
+rlabel metal1 102 34 102 34 5 vdd
+rlabel metal1 122 -23 122 -23 1 a_bar
+rlabel metal1 101 -28 101 -28 1 GND
+rlabel metal1 147 -8 147 -8 1 out
+rlabel m123contact 182 -3 182 -3 7 b
+<< end >>
