@@ -12,7 +12,7 @@ This project presents a full-custom design of a 5-bit Carry Lookahead Adder (CLA
 
 ## Project Structure
 
-### 📁 Magic Files (Layout Design)
+### Magic Files (Layout Design)
 Layout mask designs created using Magic tool for TSMC 180nm technology:
 
 - **CLA.mag / CLA.ext** - 5-bit Carry Lookahead Adder main layout and extracted view
@@ -21,9 +21,16 @@ Layout mask designs created using Magic tool for TSMC 180nm technology:
 - **inv.mag / inv.ext** - Inverter/NOT gate layout and parasitic extraction
 - **tspc.mag / tspc.ext** - TSPC (True Single Phase Clock) latch design
 - **Mcc.mag / Mcc.ext** - Multiplexer/Cross-coupled latch variant
-- **SCN6M_DEEP.09.tech27** - TSMC 180nm technology file
 
-### 📁 Ngspice Files (Simulation)
+### Technology File
+- **SCN6M_DEEP.09.tech27** - 
+
+  - Contains process layers, design rules, and metal stack information
+  - Defines layer properties, colors, and accessibility for mask design
+  - Required by Magic tool for correct layout representation and DRC (Design Rule Check)
+  - Enables accurate parasitic extraction for post-layout simulation
+
+### Ngspice Files (Simulation)
 SPICE netlist files for pre-layout and post-layout circuit simulation:
 
 **File Types:**
@@ -47,7 +54,7 @@ SPICE netlist files for pre-layout and post-layout circuit simulation:
 #### Technology & Configuration
 - **TSMC_180nm.txt** - TSMC 180nm process technology parameters and models
 
-### 📄 Documentation
+### Documentation
 - **README.md** - This file
 
 ## Circuit Design Details
@@ -115,11 +122,11 @@ CLA (5-bit Adder)
 - **gates.cir** - Gate definitions for circuit simulation
 - **TSMC_180nm.txt** - Process technology models
 
+
 ## Tools Required
 
 - **Magic** - For layout design and parasitic extraction
 - **Ngspice** - For circuit simulation and verification
-- **TSMC 180nm PDK** - Process Design Kit
 
 ## Performance Characteristics
 
