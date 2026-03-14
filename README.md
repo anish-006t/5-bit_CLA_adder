@@ -149,9 +149,4 @@ The 5-bit CLA offers improved performance over ripple carry adders:
 - Extract (.ext) files contain parasitic capacitance and resistance information
 - Pre-layout and post-layout simulations should be compared for design closure
 
-## Author & License
-
-Design Project: 5-bit CLA using TSMC 180nm Technology
-
-For questions or contributions, please refer to the project repository.
 
