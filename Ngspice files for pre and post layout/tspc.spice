@@ -1,0 +1,116 @@
+* SPICE3 file created from tspc.ext - technology: scmos
+
+.option scale=0.09u
+.include TSMC_180nm.txt
+.param SUPPLY=1.8
+
+.global gnd vdd
+
+VCK ck 0 PULSE(0 {SUPPLY} 5n 5p 5p 20n 40n)
+Vdd vdd 0 {SUPPLY}
+
+Vin D 0 PULSE(0 {SUPPLY} 8n 5p 5p 15n 30n)
+
+M1000 a_148_n4# ck GND Gnd CMOSN w=10 l=2
++  ad=180 pd=76 as=360 ps=152
+M1001 a_229_25# ck a_218_n4# Gnd CMOSN w=10 l=2
++  ad=90 pd=38 as=180 ps=76
+M1002 VDD ck Y w_128_49# CMOSP w=20 l=2
++  ad=720 pd=232 as=180 ps=58
+M1003 Q a_229_25# GND Gnd CMOSN w=10 l=2
++  ad=90 pd=38 as=0 ps=0
+M1004 GND Y a_218_n4# Gnd CMOSN w=10 l=2
++  ad=0 pd=0 as=0 ps=0
+M1005 Q a_229_25# VDD w_269_47# CMOSP w=20 l=2
++  ad=180 pd=58 as=0 ps=0
+M1006 GND D X Gnd CMOSN w=10 l=2
++  ad=0 pd=0 as=90 ps=38
+M1007 a_87_26# ck X w_67_18# CMOSP w=20 l=2
++  ad=360 pd=116 as=180 ps=58
+M1008 a_87_26# D VDD w_67_18# CMOSP w=20 l=2
++  ad=0 pd=0 as=0 ps=0
+M1009 a_229_25# Y VDD w_209_48# CMOSP w=20 l=2
++  ad=180 pd=58 as=0 ps=0
+M1010 a_148_n4# X Y Gnd CMOSN w=10 l=2
++  ad=0 pd=0 as=90 ps=38
+C0 ck X 0.39fF
+C1 D ck 0.01fF
+C2 w_67_18# ck 0.21fF
+C3 Q GND 0.12fF
+C4 VDD ck 0.10fF
+C5 a_229_25# w_209_48# 0.07fF
+C6 Y ck 0.50fF
+C7 a_229_25# w_269_47# 0.08fF
+C8 w_128_49# ck 0.22fF
+C9 D X 0.17fF
+C10 a_148_n4# ck 0.10fF
+C11 w_67_18# X 0.06fF
+C12 D w_67_18# 0.25fF
+C13 Y X 0.15fF
+C14 a_229_25# ck 0.10fF
+C15 VDD D 0.07fF
+C16 VDD w_67_18# 0.14fF
+C17 a_148_n4# X 0.08fF
+C18 VDD Y 0.29fF
+C19 VDD w_128_49# 0.14fF
+C20 Y w_128_49# 0.07fF
+C21 GND ck 0.42fF
+C22 Y a_148_n4# 0.16fF
+C23 VDD a_229_25# 0.20fF
+C24 a_229_25# Y 0.07fF
+C25 a_218_n4# ck 0.10fF
+C26 GND X 0.16fF
+C27 GND D 0.24fF
+C28 a_87_26# ck 0.10fF
+C29 Q w_269_47# 0.06fF
+C30 GND Y 0.07fF
+C31 GND a_148_n4# 0.07fF
+C32 a_87_26# X 0.14fF
+C33 a_87_26# D 0.08fF
+C34 a_218_n4# Y 0.10fF
+C35 a_87_26# w_67_18# 0.13fF
+C36 a_229_25# GND 0.10fF
+C37 VDD a_87_26# 0.20fF
+C38 a_218_n4# a_229_25# 0.07fF
+C39 VDD Q 0.20fF
+C40 a_218_n4# GND 0.07fF
+C41 a_229_25# Q 0.07fF
+C42 VDD w_209_48# 0.14fF
+C43 VDD w_269_47# 0.14fF
+C44 Y w_209_48# 0.22fF
+C45 GND Gnd 0.31fF
+C46 a_218_n4# Gnd 0.11fF
+C47 a_148_n4# Gnd 0.11fF
+C48 X Gnd 0.25fF
+C49 Q Gnd 0.15fF
+C50 a_229_25# Gnd 0.42fF
+C51 Y Gnd 0.95fF
+C52 ck Gnd 0.30fF
+C53 a_87_26# Gnd 0.00fF
+C54 VDD Gnd 0.87fF
+C55 D Gnd 0.61fF
+C56 w_269_47# Gnd 1.49fF
+C57 w_209_48# Gnd 1.61fF
+C58 w_128_49# Gnd 1.57fF
+C59 w_67_18# Gnd 3.02fF
+
+.tran 0.1n 300n
+
+.control
+
+set hcopypscolor = 1 *White background for saving plots
+set color0=white
+set color1=black
+
+run
+meas tran t_setup TRIG V(D) VAL=0.5*{SUPPLY} RISE=2 TARG V(X) VAL=0.5*{SUPPLY} FALL=2
+meas tran tcq_rise TRIG V(ck) VAL=0.5*{SUPPLY} RISE=5 TARG V(Q) VAL=0.5*{SUPPLY} RISE=3
+meas tran tcq_fall TRIG V(ck) VAL=0.5*{SUPPLY} RISE=6 TARG V(Q) VAL=0.5*{SUPPLY} FALL=3
+
+let tcq = (tcq_rise + tcq_fall)/2
+echo "tcq_avg" = " $&tcq"
+
+plot V(ck)+2 V(D)+4 V(Q) V(X)+6
+
+.endc
+.end 

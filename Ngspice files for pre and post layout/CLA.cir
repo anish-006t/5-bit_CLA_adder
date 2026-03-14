@@ -1,0 +1,226 @@
+* projext
+.include TSMC_180nm.txt
+.include gates.cir
+.param SUPPLY=1.8
+.param LAMBDA=0.09u
+.global gnd vdd
+
+
+VCK ck 0 PULSE(0 {SUPPLY} 2n 50p 50p 2n 4n)
+Vck_mcc ck_mcc 0 PULSE(0 {SUPPLY} 4.2n 50p 50p 2n 4n) 
+
+
+Va0 a0 0 PULSE(0 {SUPPLY} 1.7n 50p 50p 4n 8n)
+Va1 a1 0 DC 1.8
+Va2 a2 0 PULSE(0 {SUPPLY} 1.7n 50p 50p 8n 16n)
+Va3 a3 0 DC 0
+Va4 a4 0 DC 0
+
+Vb0 b0 0 DC 0
+Vb1 b1 0 PULSE(0 {SUPPLY} 1.7n 50p 50p 8n 16n)
+Vb2 b2 0 DC 0
+Vb3 b3 0 DC 1.8
+Vb4 b4 0 PULSE(0 {SUPPLY} 1.7n 50p 50p 16n 32n)
+
+Vcin cin 0 DC 1.8
+
+.subckt tspcff D CK Q vdd gnd
+
+.param width_N=10*LAMBDA
+.param width_P=2*width_N
+
+*stage 1
+M1 X D gnd gnd CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA +2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M2 X ck a1 vdd CMOSP W={width_P}   L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA +2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M3 a1 D vdd vdd CMOSP W={width_P}   L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA +2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+
+*stage 2
+
+M4 a2 ck gnd gnd CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA +2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M5 Y X a2 gnd CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA +2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M6 Y ck vdd vdd CMOSP W={width_P}   L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA +2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+
+*stage 3
+M7 a3 Y gnd gnd CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA +2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M8 Q_bar ck a3 gnd CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA +2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M9 Q_bar Y vdd vdd CMOSP W={width_P}   L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA +2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+
+Xinv Q Q_bar vdd gnd inv
+
+.ends tspcff
+
+
+
+
+* input ffs
+
+XFF_A0 a0 ck a0_l vdd gnd tspcff
+XFF_A1 a1 ck a1_l vdd gnd tspcff
+XFF_A2 a2 ck a2_l vdd gnd tspcff
+XFF_A3 a3 ck a3_l vdd gnd tspcff
+XFF_A4 a4 ck a4_l vdd gnd tspcff
+
+XFF_B0 b0 ck b0_l vdd gnd tspcff
+XFF_B1 b1 ck b1_l vdd gnd tspcff
+XFF_B2 b2 ck b2_l vdd gnd tspcff
+XFF_B3 b3 ck b3_l vdd gnd tspcff
+XFF_B4 b4 ck b4_l vdd gnd tspcff
+
+XFF_CIN cin ck cin_l vdd gnd tspcff
+
+* ----------------------------------------------------------------
+* Generate p_i and g_i OUTSIDE the chain (so each carry stage remains clean)
+* p_i = A xor B    (xor2)
+* g_i = A & B      (and2)
+* ----------------------------------------------------------------
+X_P0 p0 a0_l b0_l vdd gnd xor2
+X_G0 g0 a0_l b0_l vdd gnd and2
+
+X_P1 p1 a1_l b1_l vdd gnd xor2
+X_G1 g1 a1_l b1_l vdd gnd and2
+
+X_P2 p2 a2_l b2_l vdd gnd xor2
+X_G2 g2 a2_l b2_l vdd gnd and2
+
+X_P3 p3 a3_l b3_l vdd gnd xor2
+X_G3 g3 a3_l b3_l vdd gnd and2
+
+X_P4 p4 a4_l b4_l vdd gnd xor2
+X_G4 g4 a4_l b4_l vdd gnd and2
+
+.param width_N=20*LAMBDA
+.param width_P=width_N
+* stage -1: C0_bar at N0
+
+Mpre0 N0 ck_mcc vdd vdd CMOSP W={width_P}   L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_c0 N0 cin_l nbot0 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_bot0 nbot0 ck_mcc gnd gnd CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+C_N0 N0 0 8f
+
+Xinvc0 C0 N0 vdd gnd inv
+
+* ---- Stage 0: C1_bar at N1 ----
+Mpre1 N1 ck_mcc vdd vdd CMOSP W={width_P}   L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_g0 N1 g0 nbot1 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_p0 N0 p0 N1 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_bot1 nbot1 ck_mcc 0 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+C_N1 N1 0 8f
+
+Xinvc1 C1 N1 vdd gnd inv
+
+* ---- Stage 1: C2_bar at N2 ----
+Mpre2 N2 ck_mcc vdd vdd CMOSP W={width_P}   L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_g1 N2 g1 nbot2 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_p1 N1 p1 N2 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_bot2 nbot2 ck_mcc 0 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+C_N2 N2 0 8f
+
+Xinvc2 C2 N2 vdd gnd inv
+
+* ---- Stage 2: C3_bar at N3 ----
+Mpre3 N3 ck_mcc vdd vdd CMOSP W={width_P}   L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_g2 N3 g2 nbot3 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_p2 N2 p2 N3 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_bot3 nbot3 ck_mcc 0 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+C_N3 N3 0 8f
+
+Xinvc3 C3 N3 vdd gnd inv
+
+* ---- Stage 3: C4_bar at N4 ----
+Mpre4 N4 ck_mcc vdd vdd CMOSP W={width_P}   L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_g3 N4 g3 nbot4 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_p3 N3 p3 N4 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_bot4 nbot4 ck_mcc 0 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+C_N4 N4 0 8f
+
+Xinvc4 C4 N4 vdd gnd inv
+
+* ---- Stage 4: C5_bar at N5 (final carry) ----
+Mpre5 N5 ck_mcc vdd vdd CMOSP W={width_P}   L={2*LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+M_g4 N5 g4 nbot5 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_p4 N4 p4 N5 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M_bot5 nbot5 ck_mcc 0 0 CMOSN W={width_N}   L={2*LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+C_N5 N5 0 10f
+
+Xinvc5 C5 N5 vdd gnd inv
+
+
+
+
+X_SUM0 sum0_raw p0 C0 vdd gnd xor2
+X_SUM1 sum1_raw p1 C1 vdd gnd xor2
+X_SUM2 sum2_raw p2 C2 vdd gnd xor2
+X_SUM3 sum3_raw p3 C3 vdd gnd xor2
+X_SUM4 sum4_raw p4 C4 vdd gnd xor2
+
+
+** outputs FFs to latch sum bits
+
+XFF_SUM0 sum0_raw ck sum0 vdd gnd tspcff
+XFF_SUM1 sum1_raw ck sum1 vdd gnd tspcff
+XFF_SUM2 sum2_raw ck sum2 vdd gnd tspcff
+XFF_SUM3 sum3_raw ck sum3 vdd gnd tspcff
+XFF_SUM4 sum4_raw ck sum4 vdd gnd tspcff
+XFF_Cout C5 ck cout vdd gnd tspcff
+
+
+
+
+
+
+
+
+
+
+.tran 0.1n 50n 
+
+.control
+set hcopypscolor = 1
+set color0=white
+set color1=black
+
+run
+set curplottitle = "cla5_mcc_final"
+* plot V(sum0_raw) V(sum1_raw)+2 V(sum2_raw)+4 V(sum3_raw)+6 V(sum4_raw)+8 V(C5)+10 V(ck)+12 C(ck_mcc)+14
+plot V(sum0) V(sum1)+2 V(sum2)+4 V(sum3)+6 V(sum4)+8 V(cout)+10 V(ck)+12 V(ck_mcc)+14
+plot V(a4_l)+10 V(a3_l)+8 V(a2_l)+6 V(a1_l)+4 V(a0_l)+2 V(ck)
+plot V(b4_l)+10 V(b3_l)+8 V(b2_l)+6 V(b1_l)+4 V(b0_l)+2 V(ck)
+* plot V(C0)+12 V(C5)+10 V(C4)+8 V(C3)+6 V(C2)+4 V(C1)+2 V(ck_mcc) V(Ck)
+* plot V(p4)+10 V(p3)+8 V(p2)+6 V(p1)+4 V(p0)+2 V(ck)
+* plot V(g4)+10 V(g3)+8 V(g2)+6 V(g1)+4 V(g0)+2 V(ck)
+
+
+.endc
+.end
