@@ -26,18 +26,23 @@ Layout mask designs created using Magic tool for TSMC 180nm technology:
 ### 📁 Ngspice Files (Simulation)
 SPICE netlist files for pre-layout and post-layout circuit simulation:
 
-#### Netlists
-- **CLA.spice** - Main 5-bit CLA SPICE netlist
-- **gates.cir** - Basic logic gates (AND, XOR, INV) definitions
-- **CLA.cir** - CLA complete circuit file with testbench
+**File Types:**
+- **.spice files** - Automatically generated netlists extracted from Magic layout files using `ext2spice` command. These contain the circuit netlist with parasitic RC parameters extracted from the physical layout (post-layout simulation).
+- **.cir files** - Manually written NGspice testbench files for circuit testing and functional verification. These contain simulation directives, test vectors, and measurement commands for verification.
 
-#### Individual Component Files
-- **and_2.spice** - 2-input AND gate netlist
-- **xor.spice** - XOR gate netlist
-- **inv.spice** - Inverter gate netlist
-- **tspc.spice** - TSPC latch netlist
-- **tspcff.cir** - TSPC flip-flop variant
-- **Mcc.spice** - Multiplexer cell netlist
+#### Extracted Layout Netlists (.spice)
+- **CLA.spice** - Main 5-bit CLA SPICE netlist (extracted from CLA.mag)
+- **and_2.spice** - 2-input AND gate netlist (extracted from and_2.mag)
+- **xor.spice** - XOR gate netlist (extracted from xor.mag)
+- **inv.spice** - Inverter gate netlist (extracted from inv.mag)
+- **tspc.spice** - TSPC latch netlist (extracted from tspc.mag)
+- **Mcc.spice** - Multiplexer cell netlist (extracted from Mcc.mag)
+
+#### Test & Simulation Files (.cir)
+- **CLA.cir** - CLA complete circuit testbench with simulation commands
+- **gates.cir** - Basic logic gates (AND, XOR, INV) simulation and verification
+- **mcc.cir** - Multiplexer cell testing
+- **tspcff.cir** - TSPC flip-flop variant testbench
 
 #### Technology & Configuration
 - **TSMC_180nm.txt** - TSMC 180nm process technology parameters and models

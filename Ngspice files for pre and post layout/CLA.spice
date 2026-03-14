@@ -12,17 +12,18 @@ VCK ck 0 PULSE(0 {SUPPLY} 2n 50p 50p 2n 4n)
 Vck_mcc ck_mcc 0 PULSE(0 {SUPPLY} 4.2n 50p 50p 2n 4n) 
 
 
-Va0 a0 0 DC 1.8
-Va1 a1 0 DC 1.8
-Va2 a2 0 DC 1.8
-Va3 a3 0 DC 1.8
-Va4 a4 0 DC 1.8
 
-Vb0 b0 0 DC 1.8
-Vb1 b1 0 DC 1.8
-Vb2 b2 0 DC 1.8
+Va0 a0 0 PULSE(0 {SUPPLY} 1.7n 50p 50p 4n 8n)
+Va1 a1 0 DC 1.8
+Va2 a2 0 PULSE(0 {SUPPLY} 1.7n 50p 50p 8n 16n)
+Va3 a3 0 DC 0
+Va4 a4 0 DC 0
+
+Vb0 b0 0 DC 0
+Vb1 b1 0 PULSE(0 {SUPPLY} 1.7n 50p 50p 8n 16n)
+Vb2 b2 0 DC 0
 Vb3 b3 0 DC 1.8
-Vb4 b4 0 DC 1.8
+Vb4 b4 0 PULSE(0 {SUPPLY} 1.7n 50p 50p 16n 32n)
 
 Vcin cin 0 DC 0
 
